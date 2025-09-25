@@ -1,0 +1,15 @@
+# Local Frame Server Dependencies (Server 1)
+# Minimal dependencies for frame capture and serving
+
+# Web Framework
+Flask==2.3.3
+
+# Computer Vision
+opencv-python==4.8.1.78
+
+# Basic dependencies (automatically included with above)
+# numpy will be installed as opencv-python dependency
+# werkzeug will be installed as Flask dependency
+
+# Optional: For better error handling and JSON responses
+requests==2.31.0

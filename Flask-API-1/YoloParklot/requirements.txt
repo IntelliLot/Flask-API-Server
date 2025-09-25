@@ -1,0 +1,31 @@
+# YOLOv8 Parking Detection System Requirements
+
+# Core ML/CV Dependencies
+ultralytics>=8.0.0          # YOLOv8 object detection
+opencv-python>=4.5.0        # Computer vision operations
+numpy>=1.21.0              # Numerical computations
+torch>=1.8.0               # PyTorch (installed with ultralytics)
+torchvision>=0.9.0         # Computer vision models
+
+# Image Processing
+pillow>=8.0.0              # Image handling
+matplotlib>=3.3.0          # Visualization
+
+# Data Processing
+scipy>=1.4.1               # Scientific computing
+pandas>=1.3.0              # Data manipulation (optional)
+
+# System Utilities
+psutil>=5.8.0              # System monitoring
+pyyaml>=5.3.1              # Configuration files
+requests>=2.23.0           # HTTP requests
+
+# Development & Testing (optional)
+pytest>=6.0.0              # Testing framework
+pytest-cov>=2.10.0         # Coverage reporting
+black>=21.0.0              # Code formatting
+flake8>=3.8.0              # Code linting
+
+# Optional: Jupyter for analysis
+jupyter>=1.0.0             # Notebook environment
+ipywidgets>=7.6.0          # Interactive widgets
