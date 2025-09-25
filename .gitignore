@@ -1,0 +1,117 @@
+# Two-Server YOLO Processing Architecture
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+.Python
+build/
+dist/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments (project-specific)
+venv/
+env/
+.venv/
+.env
+venv_flask/
+venv_local/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.spyderproject
+.spyproject
+.ropeproject
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs and process files
+*.log
+*.log.*
+*.pid
+/tmp/
+/temp/
+flask_server.log
+frame_server.log
+flask_processing.log
+local_processing.log
+local_server.log
+
+# Output directories
+output/
+outputs/
+results/
+processed_frames/
+captured_frames/
+received_frames/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+*~
+
+# YoloParklot specific
+YoloParklot/runs/
+YoloParklot/datasets/
+YoloParklot/wandb/
+*.pt
+*.onnx
+
+# Media files
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+*.flv
+*.jpg
+*.jpeg
+*.png
+*.bmp
+*.tiff
+
+# Configuration files (keep examples)
+config.ini
+*.env
+!simple_config.env
+!.env.example
+
+# Test results and coverage
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Flask instance folder
+instance/
+.webassets-cache
+
+# Git submodules (exclude individual server repos)
+Flask-API-1/.git/
+Local-Server-1/.git/
