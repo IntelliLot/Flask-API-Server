@@ -1,8 +1,6 @@
-# Flask API Server (Server 2) - Core Requirements
-Flask==2.3.3
+# Flask API Server Requirements (Server II) - Simplified
+Flask==3.0.0
 requests==2.31.0
-opencv-python==4.8.1.78
-numpy==1.24.3
-ultralytics==8.0.196
-torch>=1.13.0
-torchvision>=0.14.0
+opencv-python
+numpy
+Pillow
