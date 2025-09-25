@@ -54,12 +54,16 @@ An AI-powered Flask server that processes camera frames using YoloParklot for in
    pip install -r requirements.txt
    ```
 
-4. **Verify YoloParklot setup**:
+4. **Setup YoloParklot AI system**:
    ```bash
-   # Check if model file exists
-   ls -la YoloParklot/runs/detect/carpk_demo/weights/best.pt
+   # Automated setup (recommended)
+   ./setup_yoloparklot.sh
    
-   # Check parking positions
+   # Or manual setup
+   git clone https://github.com/pdschandel/YoloParklot.git
+   
+   # Verify setup
+   ls -la YoloParklot/runs/detect/carpk_demo/weights/best.pt
    ls -la YoloParklot/CarParkPos
    ```
 
