@@ -93,18 +93,16 @@ nano config.ini
 
 ## 🏃‍♂️ Running the System
 
-### Option A: Complete Background System (Recommended)
+### Option 1: Interactive Mode (Recommended)
 ```bash
 cd /path/to/MajorProject
-./start_complete_system.sh
+./run_interactive_system.sh
 
-# Check system status
-ps aux | grep python | grep -E "(frame_server|flask_server)"
-
-# View console outputs
-tail -f /tmp/flask_output.log    # Flask server output
-tail -f /tmp/local_output.log    # Local server output
+# Console output will be visible directly
+# Press Ctrl+C to stop the system
 ```
+
+### Option 2: Manual Start (Advanced)
 
 ### Option B: Interactive Mode (Live Console)
 ```bash

@@ -34,8 +34,8 @@ This repository contains a complete **Two-Server YOLO Parking Detection Architec
 ```bash
 git clone https://github.com/yourusername/MajorProject.git
 cd MajorProject
-chmod +x *.sh Flask-API-1/*.sh Local-Server-1/*.sh
-./start_complete_system.sh
+chmod +x run_interactive_system.sh
+./run_interactive_system.sh
 ```
 
 ### Console Output Example
@@ -55,10 +55,7 @@ Timestamp: 2024-12-27 04:28:15
 MajorProject/
 ├── 📋 README.md                     # Main documentation
 ├── 📋 SETUP_GUIDE.md               # Complete setup instructions
-├── 🔧 start_complete_system.sh     # Background system startup
 ├── 🔧 run_interactive_system.sh    # Interactive mode with live console
-├── 🔧 view_live_output.sh          # Live output viewer
-├── 🧪 test_complete_pipeline.sh    # End-to-end testing
 ├── Local-Server-1/                 # Camera capture server
 │   ├── frame_server.py             # Main camera server
 │   ├── requirements.txt            # Dependencies
@@ -102,24 +99,12 @@ MajorProject/
 - **Health Monitoring**: System status and availability checks
 - **Statistics Tracking**: Performance metrics and usage data
 
-## 🎮 Usage Options
+## 🎮 Usage
 
-### Option 1: Background System (Production)
-```bash
-./start_complete_system.sh
-# Outputs logged to /tmp/flask_output.log and /tmp/local_output.log
-```
-
-### Option 2: Interactive Mode (Development)
+### Interactive Mode (Only Option)
 ```bash
 ./run_interactive_system.sh
 # Direct console output visible in terminal
-```
-
-### Option 3: Live Viewer (Monitoring)
-```bash
-./start_complete_system.sh  # Start background
-./view_live_output.sh       # Watch live logs in separate terminal
 ```
 
 ## 🔧 Configuration
@@ -157,14 +142,12 @@ OUTPUT_DIRECTORY = output
 
 ### Automated Testing
 ```bash
-# Complete system test
-./test_complete_pipeline.sh
+# Check system health
+curl http://127.0.0.1:5000/    # Local Server
+curl http://127.0.0.1:8000/    # Flask API
 
-# Integration testing
-python test_integration.py
-
-# Individual component tests
-python test_system.py
+# Test parking data
+curl http://127.0.0.1:8000/latest_result | jq
 ```
 
 ### Manual Verification
@@ -264,12 +247,12 @@ pip install -r requirements.txt
 
 ### Local Development
 ```bash
-./run_interactive_system.sh  # Development with live console
+./run_interactive_system.sh  # Interactive with live console
 ```
 
 ### Production Environment
 ```bash
-./start_complete_system.sh   # Background processes with logging
+./run_interactive_system.sh > system_output.log 2>&1 &  # Background with logging
 ```
 
 ### Docker Support (Optional)

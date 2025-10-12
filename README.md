@@ -137,27 +137,16 @@ cd Flask-API-1
 pip install -r requirements.txt
 ```
 
-### 2. Start System (Choose One Method)
+### 2. Start System
 
-**Option A: Complete Background System (Recommended)**
-```bash
-./start_complete_system.sh
-# View outputs: check /tmp/flask_output.log and /tmp/local_output.log
-```
-
-**Option B: Interactive Mode (Live Console Output)**
+**Single Interactive Mode**
 ```bash
 ./run_interactive_system.sh
 # Flask console output visible directly in terminal
+# Press Ctrl+C to stop the entire system
 ```
 
-**Option C: Background + Live Viewer**
-```bash
-./start_complete_system.sh
-./view_live_output.sh  # In another terminal to see live console output
-```
-
-**Option D: Manual Start**
+**Manual Start (Advanced)**
 ```bash
 # Terminal 1 - Local Server
 cd Local-Server-1
@@ -204,28 +193,26 @@ Timestamp: 2024-12-27 04:28:15
 ========================================
 ```
 
-### Log Files (Background Mode)
-When using background mode, outputs are saved to:
-- Flask Server: `/tmp/flask_output.log`
-- Local Server: `/tmp/local_output.log`
+### Log Files (Console Output)
+The interactive system displays outputs directly in the terminal console.
+For background operation, you can redirect output manually:
+```bash
+./run_interactive_system.sh > system_output.log 2>&1 &
+```
 
 ### Live Output Viewing
 ```bash
-# View live Flask console output
-tail -f /tmp/flask_output.log
+# Run interactive system (live console output)
+./run_interactive_system.sh
 
-# View live Local server output  
-tail -f /tmp/local_output.log
-
-# Or use the provided script
-./view_live_output.sh
+# Or run in background and view output
+./run_interactive_system.sh > output.log 2>&1 &
+tail -f output.log
 ```
 
 ### System Status Scripts
-Available utility scripts for monitoring:
-- `start_complete_system.sh` - Complete background startup
-- `run_interactive_system.sh` - Interactive mode with live console
-- `view_live_output.sh` - Live output viewer
+Available utility script:
+- `run_interactive_system.sh` - Interactive mode with live console output
 
 ### Basic Frame Processing
 ```bash
@@ -336,9 +323,7 @@ MajorProject/
 │   ├── config.ini            # Configuration  
 │   ├── requirements.txt      # Dependencies
 │   └── YoloParklot/         # YOLOv8 parking detection system
-├── start_complete_system.sh     # Background system startup
 ├── run_interactive_system.sh    # Interactive mode with live console
-├── view_live_output.sh          # Live output viewer
 └── README.md                # This file
 ```
 
