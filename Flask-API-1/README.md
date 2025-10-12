@@ -226,20 +226,13 @@ print('YoloParklot working:', result[1])
 
 ### Test Complete Pipeline
 ```bash
-# Full system integration test
-python3 ../test_complete_pipeline.sh
-```
+# Verify YoloParklot setup
+ls -la YoloParklot/runs/detect/carpk_demo/weights/best.pt
+ls -la YoloParklot/CarParkPos
 
-### Test Individual Components
-```bash
-# Test Flask server
-python3 test_flask.py
-
-# Test processing endpoint
+# Test API endpoints
 curl -X POST http://127.0.0.1:8000/process_frame
-
-# Monitor processing logs
-tail -f flask_server.log
+curl http://127.0.0.1:8000/stats
 ```
 
 ## 📊 YoloParklot Capabilities

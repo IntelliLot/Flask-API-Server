@@ -145,18 +145,19 @@ python flask_server.py
 curl http://127.0.0.1:5000/    # Local Server health
 curl http://127.0.0.1:8000/    # Flask API Server health
 
-# Check server status
-./check_system_status.sh
+# Check server processes
+ps aux | grep -E "(frame_server|flask_server)"
 ```
 
 ### Integration Testing
 ```bash
-# Run complete pipeline test
-./test_complete_pipeline.sh
+# Check system health
+curl http://127.0.0.1:5000/    # Local Server health
+curl http://127.0.0.1:8000/    # Flask API Server health
 
-# Run individual tests
-python test_integration.py
-python test_system.py
+# Test API endpoints
+curl -X POST http://127.0.0.1:8000/process_frame
+curl http://127.0.0.1:8000/latest_result
 ```
 
 ### Console Output Verification

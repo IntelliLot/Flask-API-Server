@@ -149,13 +149,12 @@ curl http://127.0.0.1:5000/camera_info
 
 ```bash
 # Test camera capture
+cd YoloParklot
 python3 test_camera.py
 
-# Test server connectivity
-python3 test_verification.py
-
-# Integration test with Flask API
-python3 ../test_complete_pipeline.sh
+# Verify camera connectivity  
+curl http://127.0.0.1:5000/
+curl http://127.0.0.1:5000/latest_frame
 ```
 
 ## 📊 Monitoring

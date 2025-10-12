@@ -181,9 +181,11 @@ Timestamp: 2024-12-27 04:26:37
 ========================================
 ```
 
-### 4. Test Integration
+### 4. Verify System
 ```bash
-python test_integration.py
+# Check system health
+curl http://127.0.0.1:5000/    # Local Server
+curl http://127.0.0.1:8000/    # Flask API Server
 ```
 
 ## Monitoring Features
@@ -224,8 +226,6 @@ Available utility scripts for monitoring:
 - `start_complete_system.sh` - Complete background startup
 - `run_interactive_system.sh` - Interactive mode with live console
 - `view_live_output.sh` - Live output viewer
-- `test_complete_pipeline.sh` - End-to-end testing
-- `show_actual_console_output.py` - Display actual console output
 
 ### Basic Frame Processing
 ```bash
@@ -336,8 +336,9 @@ MajorProject/
 │   ├── config.ini            # Configuration  
 │   ├── requirements.txt      # Dependencies
 │   └── YoloParklot/         # YOLOv8 parking detection system
-├── start_servers.sh          # Startup script
-├── test_integration.py       # Integration tests
+├── start_complete_system.sh     # Background system startup
+├── run_interactive_system.sh    # Interactive mode with live console
+├── view_live_output.sh          # Live output viewer
 └── README.md                # This file
 ```
 
