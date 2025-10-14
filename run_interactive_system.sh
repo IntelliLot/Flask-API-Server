@@ -50,7 +50,7 @@ start_local_server() {
     print_info "Starting Local Server (background)..."
     cd /home/giyu/Desktop/MajorProject/Local-Server-1
     source venv_local/bin/activate
-    python frame_server.py > /tmp/local_live.log 2>&1 &
+    python3 frame_server.py > /tmp/local_live.log 2>&1 &
     LOCAL_PID=$!
     print_status "Local server started (PID: $LOCAL_PID)"
     sleep 5
@@ -71,7 +71,7 @@ start_flask_server_interactive() {
     echo ""
     
     # Start Flask server in foreground
-    python flask_server.py &
+    python3 flask_server.py &
     FLASK_PID=$!
     
     # Wait for Flask to start
