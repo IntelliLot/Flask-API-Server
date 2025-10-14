@@ -1,0 +1,6 @@
+# Flask API Server Requirements (Server II) - Simplified
+Flask==3.0.0
+requests==2.31.0
+opencv-python
+numpy
+Pillow
