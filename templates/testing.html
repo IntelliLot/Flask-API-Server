@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 API Testing Dashboard - Parking Detection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #2c3e50;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header p {
+            color: #6c757d;
+            font-size: 16px;
+        }
+        
+        .auth-section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+        
+        .auth-section h2 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .token-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px dashed #dee2e6;
+            margin-bottom: 20px;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        
+        .token-display.has-token {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .endpoint-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        
+        .endpoint-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .endpoint-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .method-badge {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .method-post {
+            background: #28a745;
+            color: white;
+        }
+        
+        .method-get {
+            background: #007bff;
+            color: white;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #495057;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        input[type="text"],
+        input[type="password"],
+        input[type="number"],
+        input[type="file"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        textarea {
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+        }
+        
+        .response-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #dee2e6;
+            background: #f8f9fa;
+            max-height: 400px;
+            overflow: auto;
+        }
+        
+        .response-box.success {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        
+        .response-box.error {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+        
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .response-status {
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .status-200 { background: #28a745; color: white; }
+        .status-201 { background: #17a2b8; color: white; }
+        .status-400 { background: #ffc107; color: black; }
+        .status-401 { background: #fd7e14; color: white; }
+        .status-404 { background: #6c757d; color: white; }
+        .status-500 { background: #dc3545; color: white; }
+        
+        .response-time {
+            font-size: 12px;
+            color: #6c757d;
+        }
+        
+        .response-body {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .info-box {
+            background: #cfe2ff;
+            border: 2px solid #0d6efd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .copy-btn {
+            padding: 4px 8px;
+            font-size: 12px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .copy-btn:hover {
+            background: #5a6268;
+        }
+        
+        .tab-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-weight: 600;
+            color: #6c757d;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🧪 API Testing Dashboard</h1>
+            <p>Comprehensive testing interface for all Parking Detection API endpoints</p>
+        </div>
+        
+        <!-- Authentication Section -->
+        <div class="auth-section">
+            <h2>🔐 Authentication</h2>
+            <div class="info-box">
+                <strong>ℹ️ Info:</strong> Register or login to get a JWT token. The token will be automatically used for protected endpoints.
+            </div>
+            <div class="token-display" id="tokenDisplay">
+                <strong>JWT Token:</strong> <span id="tokenValue">Not logged in</span>
+                <button class="copy-btn" id="copyToken" style="display: none; margin-left: 10px;">📋 Copy</button>
+            </div>
+        </div>
+        
+        <!-- Tabs -->
+        <div class="auth-section">
+            <div class="tab-container">
+                <button class="tab active" onclick="switchTab('auth')">🔐 Authentication</button>
+                <button class="tab" onclick="switchTab('parking')">🅿️ Parking APIs</button>
+                <button class="tab" onclick="switchTab('public')">🌐 Public APIs</button>
+            </div>
+            
+            <!-- Authentication Tab -->
+            <div id="authTab" class="tab-content active">
+                <div class="grid">
+                    <!-- Register Endpoint -->
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <div class="endpoint-title">Register User</div>
+                            <span class="method-badge method-post">POST</span>
+                        </div>
+                        <form id="registerForm">
+                            <div class="form-group">
+                                <label>Username *</label>
+                                <input type="text" id="regUsername" required placeholder="parkowner1">
+                            </div>
+                            <div class="form-group">
+                                <label>Password * (min 6 chars)</label>
+                                <input type="password" id="regPassword" required placeholder="secure123">
+                            </div>
+                            <div class="form-group">
+                                <label>Organization Name *</label>
+                                <input type="text" id="regOrgName" required placeholder="Downtown Parking">
+                            </div>
+                            <div class="form-group">
+                                <label>Location *</label>
+                                <input type="text" id="regLocation" required placeholder="123 Main St, City">
+                            </div>
+                            <div class="form-group">
+                                <label>Parking Lot Size *</label>
+                                <input type="number" id="regSize" required placeholder="50" min="1">
+                            </div>
+                            <div class="button-group">
+                                <button type="submit" class="btn-primary">
+                                    📝 Register
+                                </button>
+                            </div>
+                        </form>
+                        <div class="loading" id="registerLoading">
+                            <div class="spinner"></div>
+                            <p>Registering user...</p>
+                        </div>
+                        <div class="response-box hidden" id="registerResponse"></div>
+                    </div>
+                    
+                    <!-- Login Endpoint -->
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <div class="endpoint-title">Login</div>
+                            <span class="method-badge method-post">POST</span>
+                        </div>
+                        <form id="loginForm">
+                            <div class="form-group">
+                                <label>Username *</label>
+                                <input type="text" id="loginUsername" required placeholder="parkowner1">
+                            </div>
+                            <div class="form-group">
+                                <label>Password *</label>
+                                <input type="password" id="loginPassword" required placeholder="secure123">
+                            </div>
+                            <div class="button-group">
+                                <button type="submit" class="btn-success">
+                                    🔓 Login
+                                </button>
+                            </div>
+                        </form>
+                        <div class="loading" id="loginLoading">
+                            <div class="spinner"></div>
+                            <p>Logging in...</p>
+                        </div>
+                        <div class="response-box hidden" id="loginResponse"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Parking APIs Tab -->
+            <div id="parkingTab" class="tab-content">
+                <div class="info-box">
+                    <strong>⚠️ Authentication Required:</strong> You must be logged in to use these endpoints. Login first in the Authentication tab.
+                </div>
+                
+                <div class="grid">
+                    <!-- Update Raw Endpoint -->
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <div class="endpoint-title">Update Raw (Process Image)</div>
+                            <span class="method-badge method-post">POST</span>
+                        </div>
+                        <form id="updateRawForm">
+                            <div class="form-group">
+                                <label>Image File *</label>
+                                <input type="file" id="rawImage" accept="image/*" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Camera ID *</label>
+                                <input type="text" id="rawCameraId" required placeholder="camera_01">
+                            </div>
+                            <div class="form-group">
+                                <label>Parking Coordinates * (JSON Array)</label>
+                                <textarea id="rawCoordinates" placeholder='[[100,200,300,400],[350,200,550,400]]'>[[401,238,508,286],[752,377,859,425],[55,100,162,148],[56,146,163,194],[50,241,157,289]]</textarea>
+                            </div>
+                            <div class="button-group">
+                                <button type="submit" class="btn-primary">
+                                    🚀 Process Image
+                                </button>
+                            </div>
+                        </form>
+                        <div class="loading" id="updateRawLoading">
+                            <div class="spinner"></div>
+                            <p>Processing image...</p>
+                        </div>
+                        <div class="response-box hidden" id="updateRawResponse"></div>
+                    </div>
+                    
+                    <!-- Update Processed Endpoint -->
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <div class="endpoint-title">Update (Edge-Processed Data)</div>
+                            <span class="method-badge method-post">POST</span>
+                        </div>
+                        <form id="updateForm">
+                            <div class="form-group">
+                                <label>Camera ID *</label>
+                                <input type="text" id="updateCameraId" required placeholder="camera_01">
+                            </div>
+                            <div class="form-group">
+                                <label>Total Slots *</label>
+                                <input type="number" id="updateTotalSlots" required placeholder="50" min="1">
+                            </div>
+                            <div class="form-group">
+                                <label>Occupied Slots *</label>
+                                <input type="number" id="updateOccupiedSlots" required placeholder="30" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Empty Slots *</label>
+                                <input type="number" id="updateEmptySlots" required placeholder="20" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Occupancy Rate * (%)</label>
+                                <input type="number" id="updateOccupancyRate" required placeholder="60.0" step="0.1" min="0" max="100">
+                            </div>
+                            <div class="button-group">
+                                <button type="submit" class="btn-primary">
+                                    📊 Submit Data
+                                </button>
+                            </div>
+                        </form>
+                        <div class="loading" id="updateLoading">
+                            <div class="spinner"></div>
+                            <p>Submitting data...</p>
+                        </div>
+                        <div class="response-box hidden" id="updateResponse"></div>
+                    </div>
+                    
+                    <!-- Get Parking Data Endpoint -->
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <div class="endpoint-title">Get Parking Data</div>
+                            <span class="method-badge method-get">GET</span>
+                        </div>
+                        <form id="getParkingDataForm">
+                            <div class="form-group">
+                                <label>User ID * (from login response)</label>
+                                <input type="text" id="dataUserId" required placeholder="User ID will be auto-filled after login">
+                            </div>
+                            <div class="form-group">
+                                <label>Camera ID (optional)</label>
+                                <input type="text" id="dataCameraId" placeholder="camera_01">
+                            </div>
+                            <div class="form-group">
+                                <label>Limit (default 50, max 500)</label>
+                                <input type="number" id="dataLimit" placeholder="50" min="1" max="500">
+                            </div>
+                            <div class="button-group">
+                                <button type="submit" class="btn-primary">
+                                    📥 Get Data
+                                </button>
+                            </div>
+                        </form>
+                        <div class="loading" id="getParkingDataLoading">
+                            <div class="spinner"></div>
+                            <p>Fetching data...</p>
+                        </div>
+                        <div class="response-box hidden" id="getParkingDataResponse"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Public APIs Tab -->
+            <div id="publicTab" class="tab-content">
+                <div class="info-box">
+                    <strong>ℹ️ No Authentication Required:</strong> These endpoints are publicly accessible.
+                </div>
+                
+                <div class="grid">
+                    <!-- Health Check Endpoint -->
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <div class="endpoint-title">Health Check</div>
+                            <span class="method-badge method-get">GET</span>
+                        </div>
+                        <form id="healthForm">
+                            <div class="button-group">
+                                <button type="submit" class="btn-success">
+                                    ❤️ Check Health
+                                </button>
+                            </div>
+                        </form>
+                        <div class="loading" id="healthLoading">
+                            <div class="spinner"></div>
+                            <p>Checking health...</p>
+                        </div>
+                        <div class="response-box hidden" id="healthResponse"></div>
+                    </div>
+                    
+                    <!-- Detect Parking Endpoint -->
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <div class="endpoint-title">Detect Parking (Public)</div>
+                            <span class="method-badge method-post">POST</span>
+                        </div>
+                        <form id="detectForm">
+                            <div class="form-group">
+                                <label>Image File *</label>
+                                <input type="file" id="detectImage" accept="image/*" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Parking Coordinates * (JSON Array)</label>
+                                <textarea id="detectCoordinates" placeholder='[[100,200,300,400],[350,200,550,400]]'>[[401,238,508,286],[752,377,859,425],[55,100,162,148],[56,146,163,194],[50,241,157,289]]</textarea>
+                            </div>
+                            <div class="button-group">
+                                <button type="submit" class="btn-primary">
+                                    🔍 Detect Parking
+                                </button>
+                            </div>
+                        </form>
+                        <div class="loading" id="detectLoading">
+                            <div class="spinner"></div>
+                            <p>Detecting parking...</p>
+                        </div>
+                        <div class="response-box hidden" id="detectResponse"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Base URL for API
+        const BASE_URL = 'http://localhost:5001';
+        
+        // Store JWT token and user info
+        let jwtToken = null;
+        let currentUserId = null;
+        
+        // Tab switching
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        // Update token display
+        function updateTokenDisplay(token, userId) {
+            jwtToken = token;
+            currentUserId = userId;
+            
+            const tokenDisplay = document.getElementById('tokenDisplay');
+            const tokenValue = document.getElementById('tokenValue');
+            const copyBtn = document.getElementById('copyToken');
+            
+            if (token) {
+                tokenValue.textContent = token.substring(0, 50) + '...';
+                tokenDisplay.classList.add('has-token');
+                copyBtn.style.display = 'inline-block';
+                
+                // Auto-fill user ID in get parking data form
+                if (userId) {
+                    document.getElementById('dataUserId').value = userId;
+                }
+            } else {
+                tokenValue.textContent = 'Not logged in';
+                tokenDisplay.classList.remove('has-token');
+                copyBtn.style.display = 'none';
+            }
+        }
+        
+        // Copy token to clipboard
+        document.getElementById('copyToken').addEventListener('click', () => {
+            navigator.clipboard.writeText(jwtToken);
+            alert('Token copied to clipboard!');
+        });
+        
+        // Display response
+        function displayResponse(elementId, response, status, time) {
+            const responseBox = document.getElementById(elementId);
+            responseBox.classList.remove('hidden', 'success', 'error');
+            
+            // Add success or error class
+            if (status >= 200 && status < 300) {
+                responseBox.classList.add('success');
+            } else {
+                responseBox.classList.add('error');
+            }
+            
+            // Format response
+            let statusClass = 'status-' + Math.floor(status / 100) * 100;
+            if (status === 201) statusClass = 'status-201';
+            
+            responseBox.innerHTML = `
+                <div class="response-header">
+                    <span class="response-status ${statusClass}">Status: ${status}</span>
+                    <span class="response-time">⏱️ ${time}ms</span>
+                </div>
+                <div class="response-body">${JSON.stringify(response, null, 2)}</div>
+            `;
+        }
+        
+        // Register Form
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const loading = document.getElementById('registerLoading');
+            const responseBox = document.getElementById('registerResponse');
+            
+            loading.classList.add('active');
+            responseBox.classList.add('hidden');
+            
+            const data = {
+                username: document.getElementById('regUsername').value,
+                password: document.getElementById('regPassword').value,
+                organization_name: document.getElementById('regOrgName').value,
+                location: document.getElementById('regLocation').value,
+                size: parseInt(document.getElementById('regSize').value)
+            };
+            
+            const startTime = Date.now();
+            
+            try {
+                const response = await fetch(`${BASE_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                const time = Date.now() - startTime;
+                
+                displayResponse('registerResponse', result, response.status, time);
+                
+                if (response.ok) {
+                    alert('✅ Registration successful! You can now login.');
+                }
+            } catch (error) {
+                displayResponse('registerResponse', { error: error.message }, 0, Date.now() - startTime);
+            } finally {
+                loading.classList.remove('active');
+            }
+        });
+        
+        // Login Form
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const loading = document.getElementById('loginLoading');
+            const responseBox = document.getElementById('loginResponse');
+            
+            loading.classList.add('active');
+            responseBox.classList.add('hidden');
+            
+            const data = {
+                username: document.getElementById('loginUsername').value,
+                password: document.getElementById('loginPassword').value
+            };
+            
+            const startTime = Date.now();
+            
+            try {
+                const response = await fetch(`${BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                const time = Date.now() - startTime;
+                
+                displayResponse('loginResponse', result, response.status, time);
+                
+                if (response.ok && result.access_token) {
+                    updateTokenDisplay(result.access_token, result.user_id);
+                    alert('✅ Login successful! Token saved.');
+                }
+            } catch (error) {
+                displayResponse('loginResponse', { error: error.message }, 0, Date.now() - startTime);
+            } finally {
+                loading.classList.remove('active');
+            }
+        });
+        
+        // Update Raw Form
+        document.getElementById('updateRawForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!jwtToken) {
+                alert('❌ Please login first to get a JWT token!');
+                return;
+            }
+            
+            const loading = document.getElementById('updateRawLoading');
+            const responseBox = document.getElementById('updateRawResponse');
+            
+            loading.classList.add('active');
+            responseBox.classList.add('hidden');
+            
+            const formData = new FormData();
+            formData.append('image', document.getElementById('rawImage').files[0]);
+            formData.append('camera_id', document.getElementById('rawCameraId').value);
+            formData.append('coordinates', document.getElementById('rawCoordinates').value);
+            
+            const startTime = Date.now();
+            
+            try {
+                const response = await fetch(`${BASE_URL}/parking/updateRaw`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${jwtToken}` },
+                    body: formData
+                });
+                
+                const result = await response.json();
+                const time = Date.now() - startTime;
+                
+                displayResponse('updateRawResponse', result, response.status, time);
+            } catch (error) {
+                displayResponse('updateRawResponse', { error: error.message }, 0, Date.now() - startTime);
+            } finally {
+                loading.classList.remove('active');
+            }
+        });
+        
+        // Update Form
+        document.getElementById('updateForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!jwtToken) {
+                alert('❌ Please login first to get a JWT token!');
+                return;
+            }
+            
+            const loading = document.getElementById('updateLoading');
+            const responseBox = document.getElementById('updateResponse');
+            
+            loading.classList.add('active');
+            responseBox.classList.add('hidden');
+            
+            const data = {
+                camera_id: document.getElementById('updateCameraId').value,
+                total_slots: parseInt(document.getElementById('updateTotalSlots').value),
+                occupied_slots: parseInt(document.getElementById('updateOccupiedSlots').value),
+                empty_slots: parseInt(document.getElementById('updateEmptySlots').value),
+                occupancy_rate: parseFloat(document.getElementById('updateOccupancyRate').value)
+            };
+            
+            const startTime = Date.now();
+            
+            try {
+                const response = await fetch(`${BASE_URL}/parking/update`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${jwtToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                const time = Date.now() - startTime;
+                
+                displayResponse('updateResponse', result, response.status, time);
+            } catch (error) {
+                displayResponse('updateResponse', { error: error.message }, 0, Date.now() - startTime);
+            } finally {
+                loading.classList.remove('active');
+            }
+        });
+        
+        // Get Parking Data Form
+        document.getElementById('getParkingDataForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!jwtToken) {
+                alert('❌ Please login first to get a JWT token!');
+                return;
+            }
+            
+            const loading = document.getElementById('getParkingDataLoading');
+            const responseBox = document.getElementById('getParkingDataResponse');
+            
+            loading.classList.add('active');
+            responseBox.classList.add('hidden');
+            
+            const userId = document.getElementById('dataUserId').value;
+            const cameraId = document.getElementById('dataCameraId').value;
+            const limit = document.getElementById('dataLimit').value;
+            
+            let url = `${BASE_URL}/parking/data/${userId}?`;
+            if (cameraId) url += `camera_id=${cameraId}&`;
+            if (limit) url += `limit=${limit}&`;
+            
+            const startTime = Date.now();
+            
+            try {
+                const response = await fetch(url, {
+                    headers: { 'Authorization': `Bearer ${jwtToken}` }
+                });
+                
+                const result = await response.json();
+                const time = Date.now() - startTime;
+                
+                displayResponse('getParkingDataResponse', result, response.status, time);
+            } catch (error) {
+                displayResponse('getParkingDataResponse', { error: error.message }, 0, Date.now() - startTime);
+            } finally {
+                loading.classList.remove('active');
+            }
+        });
+        
+        // Health Check Form
+        document.getElementById('healthForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const loading = document.getElementById('healthLoading');
+            const responseBox = document.getElementById('healthResponse');
+            
+            loading.classList.add('active');
+            responseBox.classList.add('hidden');
+            
+            const startTime = Date.now();
+            
+            try {
+                const response = await fetch(`${BASE_URL}/health`);
+                const result = await response.json();
+                const time = Date.now() - startTime;
+                
+                displayResponse('healthResponse', result, response.status, time);
+            } catch (error) {
+                displayResponse('healthResponse', { error: error.message }, 0, Date.now() - startTime);
+            } finally {
+                loading.classList.remove('active');
+            }
+        });
+        
+        // Detect Parking Form
+        document.getElementById('detectForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const loading = document.getElementById('detectLoading');
+            const responseBox = document.getElementById('detectResponse');
+            
+            loading.classList.add('active');
+            responseBox.classList.add('hidden');
+            
+            const formData = new FormData();
+            formData.append('image', document.getElementById('detectImage').files[0]);
+            formData.append('coordinates', document.getElementById('detectCoordinates').value);
+            
+            const startTime = Date.now();
+            
+            try {
+                const response = await fetch(`${BASE_URL}/parking/detect`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                const time = Date.now() - startTime;
+                
+                displayResponse('detectResponse', result, response.status, time);
+            } catch (error) {
+                displayResponse('detectResponse', { error: error.message }, 0, Date.now() - startTime);
+            } finally {
+                loading.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

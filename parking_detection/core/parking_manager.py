@@ -15,6 +15,7 @@ class ParkingManager:
     """Manages parking slot detection and occupancy tracking"""
     
     def __init__(self, parking_positions_file: Optional[str] = None,
+                 parking_positions: Optional[List] = None,
                  slot_width: Optional[int] = None, 
                  slot_height: Optional[int] = None,
                  occupancy_threshold: Optional[float] = None):
@@ -22,27 +23,80 @@ class ParkingManager:
         Initialize parking manager
         
         Args:
-            parking_positions_file: Path to parking positions file
-            slot_width: Width of parking slots in pixels
-            slot_height: Height of parking slots in pixels
+            parking_positions_file: Path to parking positions file (optional if positions provided)
+            parking_positions: List of coordinates in one of two formats:
+                - (x, y): Top-left corner only, uses slot_width/height
+                - (x1, y1, x2, y2): Rectangle coordinates (top-left and bottom-right)
+            slot_width: Default width for (x, y) format slots
+            slot_height: Default height for (x, y) format slots
             occupancy_threshold: Overlap threshold to consider slot occupied
         """
-        self.positions_file = parking_positions_file or CONFIG.parking.parking_positions_file
-        self.slot_width = slot_width or CONFIG.parking.slot_width
-        self.slot_height = slot_height or CONFIG.parking.slot_height
+        self.positions_file = parking_positions_file
+        self.default_slot_width = slot_width or CONFIG.parking.slot_width
+        self.default_slot_height = slot_height or CONFIG.parking.slot_height
         self.occupancy_threshold = occupancy_threshold or CONFIG.parking.occupancy_threshold
         
-        # Load parking positions
-        self.parking_positions = load_parking_positions(self.positions_file)
+        # Load parking positions from provided list or file
+        if parking_positions is not None:
+            raw_positions = parking_positions
+            logger.info(f"Loaded {len(raw_positions)} parking positions from provided coordinates")
+        elif parking_positions_file:
+            raw_positions = load_parking_positions(parking_positions_file)
+        else:
+            # Fallback to default config file
+            self.positions_file = CONFIG.parking.parking_positions_file
+            raw_positions = load_parking_positions(self.positions_file)
+        
+        # Process positions and detect format
+        self._process_parking_positions(raw_positions)
+        
         self.total_slots = len(self.parking_positions)
         
         logger.info(f"Initialized ParkingManager with {self.total_slots} slots")
-        logger.info(f"Slot dimensions: {self.slot_width}x{self.slot_height}")
+        logger.info(f"Slot format: {'Rectangle (x1,y1,x2,y2)' if self.use_rectangles else 'Point (x,y) with dimensions'}")
+        if not self.use_rectangles:
+            logger.info(f"Default slot dimensions: {self.default_slot_width}x{self.default_slot_height}")
         logger.info(f"Occupancy threshold: {self.occupancy_threshold}")
         
         # Statistics tracking
         self.occupancy_history = []
         self.detection_history = []
+    
+    def _process_parking_positions(self, positions: List) -> None:
+        """
+        Process parking positions and determine format
+        
+        Supports two formats:
+        1. (x, y) - top-left corner with default width/height
+        2. (x1, y1, x2, y2) - rectangle with explicit boundaries
+        """
+        if not positions:
+            raise ValueError("No parking positions provided")
+        
+        # Convert to list of tuples if needed
+        positions = [tuple(p) if isinstance(p, list) else p for p in positions]
+        
+        # Detect format from first position
+        first_pos = positions[0]
+        if len(first_pos) == 2:
+            # Format: (x, y) - will use default dimensions
+            self.use_rectangles = False
+            self.parking_positions = positions
+            self.slot_dimensions = [(self.default_slot_width, self.default_slot_height)] * len(positions)
+            logger.info(f"Detected format: Point (x, y) with fixed dimensions")
+        elif len(first_pos) == 4:
+            # Format: (x1, y1, x2, y2) - explicit rectangles
+            self.use_rectangles = True
+            self.parking_positions = [(p[0], p[1]) for p in positions]  # Store as (x, y) for compatibility
+            self.slot_dimensions = [(p[2] - p[0], p[3] - p[1]) for p in positions]  # Calculate width, height
+            logger.info(f"Detected format: Rectangle (x1, y1, x2, y2)")
+            logger.info(f"Slot sizes range: {min(w for w, h in self.slot_dimensions)}x{min(h for w, h in self.slot_dimensions)} to {max(w for w, h in self.slot_dimensions)}x{max(h for w, h in self.slot_dimensions)}")
+        else:
+            raise ValueError(f"Invalid position format. Expected (x, y) or (x1, y1, x2, y2), got {len(first_pos)} values")
+        
+        # Add legacy properties for backward compatibility
+        self.slot_width = self.default_slot_width
+        self.slot_height = self.default_slot_height
     
     def detect_occupancy(self, vehicle_detections: List[Tuple[int, int, int, int, float, str]]) -> List[bool]:
         """
@@ -61,10 +115,13 @@ class ParkingManager:
             max_overlap = 0.0
             best_vehicle = None
             
+            # Get slot-specific dimensions
+            slot_w, slot_h = self.slot_dimensions[i]
+            
             for j, vehicle in enumerate(vehicle_detections):
                 vehicle_box = vehicle[:4]  # (x1, y1, x2, y2)
                 overlap_ratio = calculate_box_overlap_with_slot(
-                    vehicle_box, parking_slot, self.slot_width, self.slot_height
+                    vehicle_box, parking_slot, slot_w, slot_h
                 )
                 
                 if overlap_ratio > max_overlap:
@@ -79,7 +136,7 @@ class ParkingManager:
             slot_overlaps[i] = max_overlap
             
             if CONFIG.debug and max_overlap > 0.1:
-                logger.debug(f"Slot {i+1}: overlap={max_overlap:.3f}, occupied={occupancy[i]}")
+                logger.debug(f"Slot {i+1}: overlap={max_overlap:.3f}, occupied={occupancy[i]}, size={slot_w}x{slot_h}")
         
         # Update statistics
         occupied_count = sum(occupancy)

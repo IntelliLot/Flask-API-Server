@@ -36,7 +36,8 @@ class ParkingVisualizer:
     def draw_parking_slots(self, frame: np.ndarray, 
                           parking_positions: List[Tuple[int, int]],
                           occupancy: List[bool],
-                          slot_width: int, slot_height: int) -> np.ndarray:
+                          slot_dimensions: List[Tuple[int, int]] = None,
+                          slot_width: int = None, slot_height: int = None) -> np.ndarray:
         """
         Draw parking slot rectangles on the frame
         
@@ -44,13 +45,20 @@ class ParkingVisualizer:
             frame: Input frame
             parking_positions: List of (x, y) parking slot positions
             occupancy: List of occupancy status for each slot
-            slot_width: Width of parking slots
-            slot_height: Height of parking slots
+            slot_dimensions: List of (width, height) for each slot (optional, per-slot sizing)
+            slot_width: Default width for all slots (used if slot_dimensions not provided)
+            slot_height: Default height for all slots (used if slot_dimensions not provided)
             
         Returns:
             Frame with parking slots drawn
         """
         for i, ((x, y), is_occupied) in enumerate(zip(parking_positions, occupancy)):
+            # Get slot-specific dimensions
+            if slot_dimensions:
+                w, h = slot_dimensions[i]
+            else:
+                w, h = slot_width, slot_height
+            
             # Choose color and thickness based on occupancy
             if is_occupied:
                 color = self.config.occupied_color
@@ -60,7 +68,7 @@ class ParkingVisualizer:
                 thickness = 2
             
             # Draw parking slot rectangle
-            cv2.rectangle(frame, (x, y), (x + slot_width, y + slot_height), color, thickness)
+            cv2.rectangle(frame, (x, y), (x + w, y + h), color, thickness)
             
             # Add slot number
             text_position = (x + 5, y + 15)
@@ -209,7 +217,8 @@ class ParkingVisualizer:
                              occupancy: List[bool],
                              vehicle_detections: List[Tuple[int, int, int, int, float, str]],
                              statistics: Dict[str, any],
-                             slot_width: int, slot_height: int) -> np.ndarray:
+                             slot_dimensions: List[Tuple[int, int]] = None,
+                             slot_width: int = None, slot_height: int = None) -> np.ndarray:
         """
         Create a fully annotated frame with all visualizations
         
@@ -219,8 +228,9 @@ class ParkingVisualizer:
             occupancy: List of occupancy status
             vehicle_detections: List of vehicle detections
             statistics: Parking statistics
-            slot_width: Width of parking slots
-            slot_height: Height of parking slots
+            slot_dimensions: List of (width, height) for each slot (optional, per-slot sizing)
+            slot_width: Default width of parking slots (fallback)
+            slot_height: Default height of parking slots (fallback)
             
         Returns:
             Fully annotated frame
@@ -233,7 +243,9 @@ class ParkingVisualizer:
         
         # Draw parking slots
         annotated_frame = self.draw_parking_slots(
-            annotated_frame, parking_positions, occupancy, slot_width, slot_height
+            annotated_frame, parking_positions, occupancy, 
+            slot_dimensions=slot_dimensions,
+            slot_width=slot_width, slot_height=slot_height
         )
         
         # Draw vehicle detections

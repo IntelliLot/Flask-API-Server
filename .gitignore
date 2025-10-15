@@ -1,117 +1,386 @@
-# Two-Server YOLO Processing Architecture
-
+# ============================================================================
 # Python
+# ============================================================================
+# Byte-compiled / optimized / DLL files
 __pycache__/
+**/__pycache__/
 *.py[cod]
 *$py.class
-*.pyc
-*.pyo
-*.pyd
+*.so
+
+# C extensions
+*.so
+
+# Distribution / packaging
 .Python
 build/
+develop-eggs/
 dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
 
-# Virtual environments (project-specific)
-venv/
-env/
-.venv/
-.env
-venv_flask/
-venv_local/
-ENV/
-env.bak/
-venv.bak/
+# PyInstaller
+*.manifest
+*.spec
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-.spyderproject
-.spyproject
-.ropeproject
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
 
-# OS
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Logs and process files
-*.log
-*.log.*
-*.pid
-/tmp/
-/temp/
-flask_server.log
-frame_server.log
-flask_processing.log
-local_processing.log
-local_server.log
-
-# Output directories
-output/
-outputs/
-results/
-processed_frames/
-captured_frames/
-received_frames/
-
-# Temporary files
-*.tmp
-*.temp
-*.bak
-*.backup
-*~
-
-# YoloParklot specific
-YoloParklot/runs/
-YoloParklot/datasets/
-YoloParklot/wandb/
-*.pt
-*.onnx
-
-# Media files
-*.mp4
-*.avi
-*.mov
-*.mkv
-*.webm
-*.flv
-*.jpg
-*.jpeg
-*.png
-*.bmp
-*.tiff
-
-# Configuration files (keep examples)
-config.ini
-*.env
-!simple_config.env
-!.env.example
-
-# Test results and coverage
+# Unit test / coverage reports
 htmlcov/
 .tox/
+.nox/
 .coverage
 .coverage.*
 .cache
 nosetests.xml
 coverage.xml
 *.cover
+*.py,cover
 .hypothesis/
 .pytest_cache/
 
-# Flask instance folder
+# Translations
+*.mo
+*.pot
+
+# Django/Flask stuff
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
 instance/
 .webassets-cache
 
-# Git submodules (exclude individual server repos)
-Flask-API-1/.git/
-Local-Server-1/.git/
+# Scrapy stuff
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments - Virtual Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+*.env
+.env.local
+.env.*.local
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# ============================================================================
+# Node.js
+# ============================================================================
+# Logs
+logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Diagnostic reports
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Directory for instrumented libs
+lib-cov
+
+# Coverage directory
+coverage
+*.lcov
+.nyc_output
+
+# Grunt intermediate storage
+.grunt
+
+# Bower dependency directory
+bower_components
+
+# node-waf configuration
+.lock-wscript
+
+# Compiled binary addons
+build/Release
+
+# Dependency directories - ALL node_modules
+node_modules/
+**/node_modules/
+jspm_packages/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env.test
+.env.production
+
+# parcel-bundler cache
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+out
+
+# Nuxt.js build / generate output
+.nuxt
+dist
+
+# Gatsby files
+.cache/
+
+# vuepress build output
+.vuepress/dist
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# TernJS port file
+.tern-port
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# ============================================================================
+# IDEs and Editors
+# ============================================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+.project
+.classpath
+.settings/
+
+# ============================================================================
+# Operating Systems
+# ============================================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+desktop.ini
+*.lnk
+
+# Linux
+*~
+
+# ============================================================================
+# Project Specific - Machine Learning & Data
+# ============================================================================
+# PyTorch/ML Models (large files)
+*.pt
+*.pth
+*.onnx
+*.weights
+*.h5
+*.pkl
+*.pickle
+!runs/detect/carpk_demo/weights/best.pt
+
+# Training artifacts
+runs/
+wandb/
+mlruns/
+lightning_logs/
+
+# Data files (keep specific example files)
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.tiff
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+
+# Keep specific example files
+!carParkImg.png
+!carPark.mp4
+!ParkImage1.jpeg
+!abc.svg
+
+# Output directories
+output/
+results/
+temp/
+tmp/
+processing/
+cache/
+
+# ============================================================================
+# Logs and Databases
+# ============================================================================
+# Logs
+*.log
+*.log.*
+parking_detection.log
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+data/
+mongodb/
+
+# ============================================================================
+# Compiled and Package files
+# ============================================================================
+*.pyc
+*.pyo
+*.pyd
+*.class
+*.o
+*.a
+
+# Archive files
+*.tar
+*.tar.gz
+*.zip
+*.rar
+*.7z
+
+# ============================================================================
+# Backup and Temporary files
+# ============================================================================
+*.bak
+*.backup
+*.swp
+*.swo
+*~
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# ============================================================================
+# Security and Secrets
+# ============================================================================
+secrets/
+*.key
+*.pem
+*.cert
+*.crt
+*.p12
+*.pfx
+config.local.*
+
+# ============================================================================
+# Testing
+# ============================================================================
+test_*.py
+*_test.py
+tests/__pycache__/
+.pytest_cache/

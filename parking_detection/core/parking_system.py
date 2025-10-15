@@ -29,13 +29,15 @@ class ParkingDetectionSystem:
     
     def __init__(self, 
                  model_path: Optional[str] = None,
-                 parking_positions_file: Optional[str] = None):
+                 parking_positions_file: Optional[str] = None,
+                 parking_positions: Optional[list] = None):
         """
         Initialize the parking detection system
         
         Args:
             model_path: Path to YOLOv8 model (optional)
             parking_positions_file: Path to parking positions file (optional)
+            parking_positions: List of (x, y) tuples for parking slot coordinates (optional)
         """
         logger.info("🚀 Initializing YOLOv8 Parking Detection System")
         
@@ -44,7 +46,10 @@ class ParkingDetectionSystem:
         
         # Initialize components
         self.vehicle_detector = VehicleDetector(model_path)
-        self.parking_manager = ParkingManager(parking_positions_file)
+        self.parking_manager = ParkingManager(
+            parking_positions_file=parking_positions_file,
+            parking_positions=parking_positions
+        )
         self.visualizer = ParkingVisualizer()
         
         # Video processing state
@@ -163,6 +168,7 @@ class ParkingDetectionSystem:
             occupancy=occupancy,
             vehicle_detections=vehicle_detections,
             statistics=statistics,
+            slot_dimensions=self.parking_manager.slot_dimensions,
             slot_width=self.parking_manager.slot_width,
             slot_height=self.parking_manager.slot_height
         )
@@ -461,17 +467,34 @@ class ParkingDetectionSystem:
         # Save result
         cv2.imwrite(output_path, annotated_frame)
         
+        # Get vehicle detections for detailed logging
+        vehicle_detections = self.vehicle_detector.detect_vehicles(frame)
+        total_cars_detected = len(vehicle_detections)
+        
+        # Get occupancy information
+        occupancy = self.parking_manager.detect_occupancy(vehicle_detections)
+        
         # Log results
         logger.info("="*60)
         logger.info("📊 SINGLE IMAGE PROCESSING COMPLETED")
         logger.info("="*60)
         logger.info(f"✅ Processing time: {processing_time*1000:.1f}ms")
-        logger.info(f"🚗 Vehicles detected: {len(self.vehicle_detector.detect_vehicles(frame))}")
-        logger.info(f"🅿️ Total parking slots: {statistics.get('total_slots', 0)}")
+        logger.info(f"🚗 Total cars detected: {total_cars_detected}")
+        logger.info(f"🅿️ Total slots available: {statistics.get('total_slots', 0)}")
         logger.info(f"📈 Occupied slots: {statistics.get('occupied_slots', 0)}")
         logger.info(f"📉 Empty slots: {statistics.get('empty_slots', 0)}")
         logger.info(f"📊 Occupancy rate: {statistics.get('occupancy_rate', 0.0):.1f}%")
         logger.info(f"💾 Output saved: {output_path}")
+        logger.info("="*60)
+        
+        # Log detailed slot information
+        logger.info("📋 DETAILED PARKING SLOTS INFORMATION")
+        logger.info("="*60)
+        for i, (is_occupied, pos) in enumerate(zip(occupancy, self.parking_manager.parking_positions), 1):
+            x, y = pos
+            w, h = self.parking_manager.slot_dimensions[i-1]  # Get per-slot dimensions
+            status = "🔴 OCCUPIED" if is_occupied else "🟢 EMPTY"
+            logger.info(f"Slot {i:3d}: Position({x:4d}, {y:4d}) Size({w}x{h}) - {status}")
         logger.info("="*60)
         
         return output_path
