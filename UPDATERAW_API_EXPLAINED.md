@@ -544,6 +544,55 @@ def update_raw():
 - Access control: Can't access other users' parking data
 - Audit trail: Know who processed what and when
 
+### 🍓 Authentication from Raspberry Pi or IoT Device
+
+To upload images from a Raspberry Pi or other IoT device:
+
+**Step 1: Register (one-time)**
+```bash
+curl -X POST http://your-server:5001/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "raspi_parkinglot_01",
+    "password": "SecurePassword123!",
+    "organization_name": "My Parking Lot",
+    "location": "123 Main St",
+    "size": 50
+  }'
+```
+
+**Step 2: Login to get JWT token**
+```bash
+curl -X POST http://your-server:5001/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "raspi_parkinglot_01",
+    "password": "SecurePassword123!"
+  }'
+```
+
+Response:
+```json
+{
+  "success": true,
+  "access_token": "eyJhbGciOiJIUzI1NiIs...",
+  "expires_in": 3600
+}
+```
+
+**Step 3: Use token in updateRaw request**
+```bash
+TOKEN="eyJhbGciOiJIUzI1NiIs..."
+
+curl -X POST http://your-server:5001/parking/updateRaw \
+  -H "Authorization: Bearer $TOKEN" \
+  -F "image=@parking.jpg" \
+  -F 'coordinates=[[100,150,200,250]]' \
+  -F "camera_id=raspi_01"
+```
+
+📖 **See [RASPBERRY_PI_AUTHENTICATION_GUIDE.md](RASPBERRY_PI_AUTHENTICATION_GUIDE.md) for complete Python code examples and automatic token refresh handling!**
+
 ---
 
 ## 📊 Performance Considerations
@@ -637,6 +686,7 @@ For high-frequency real-time monitoring from edge devices with local processing 
 ---
 
 **Related Documentation:**
+- [RASPBERRY_PI_AUTHENTICATION_GUIDE.md](RASPBERRY_PI_AUTHENTICATION_GUIDE.md) - **🍓 Raspberry Pi authentication & upload guide**
 - [EDGE_APP_API_DOCUMENTATION.md](EDGE_APP_API_DOCUMENTATION.md) - Full API reference
 - [EDGE_APP_ARCHITECTURE.md](EDGE_APP_ARCHITECTURE.md) - System architecture
 - [API_DOCUMENTATION.md](API_DOCUMENTATION.md) - Complete backend API docs

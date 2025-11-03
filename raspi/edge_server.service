@@ -1,0 +1,16 @@
+[Unit]
+Description=Parking Detection Edge Server
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/YoloParklot/raspi
+ExecStart=/usr/bin/python3 /home/pi/YoloParklot/raspi/edge_server.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

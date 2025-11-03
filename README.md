@@ -28,6 +28,7 @@ This system detects vehicles in parking lots and determines which parking slots 
 - **Edge Processing Support**: Accept pre-processed data from edge devices
 - **Historical Data**: Query past parking data with filtering options
 - **Multi-camera Support**: Track multiple cameras per parking area
+- **Cloud Storage**: Automatic image upload to Google Cloud Storage with hierarchical organization (user_id/node_id/date/time)
 
 ### API Endpoints
 - `POST /register` - Register new parking owner
@@ -83,6 +84,10 @@ YoloParklot/
 
 📚 **Complete Documentation Set:**
 
+- **[DOCKER_DEPLOYMENT_GUIDE.md](DOCKER_DEPLOYMENT_GUIDE.md)** - 🐳 Docker deployment for development & production
+- **[GCS_SETUP_GUIDE.md](GCS_SETUP_GUIDE.md)** - 📦 Google Cloud Storage setup and integration guide
+- **[UPDATERAW_API_EXPLAINED.md](UPDATERAW_API_EXPLAINED.md)** - Complete `/updateRaw` API documentation  
+- **[RASPBERRY_PI_AUTHENTICATION_GUIDE.md](RASPBERRY_PI_AUTHENTICATION_GUIDE.md)** - 🍓 Authentication guide for Raspberry Pi/IoT devices
 - **[API Documentation](API_DOCUMENTATION.md)** - Full REST API reference
 - **[Edge App Quick Start](EDGE_APP_QUICK_START.md)** - 5-minute integration guide for edge devices
 - **[Edge App API Docs](EDGE_APP_API_DOCUMENTATION.md)** - Comprehensive edge integration documentation

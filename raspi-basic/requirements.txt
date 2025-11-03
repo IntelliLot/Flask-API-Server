@@ -1,0 +1,11 @@
+# Requirements for Raspberry Pi Edge Server
+# Compatible with Python 3.7+
+
+# Core dependencies
+opencv-python>=4.5.0
+requests>=2.25.0
+numpy>=1.19.0
+
+# Optional: For Raspberry Pi Camera (install system-wide)
+# picamera2 (install via: sudo apt install python3-picamera2)
+# picamera (install via: pip install picamera) - for older systems

@@ -26,7 +26,8 @@ def testing():
     """Serve the API testing interface"""
     try:
         # Get the templates directory path
-        templates_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'templates')
+        templates_dir = os.path.join(os.path.dirname(
+            os.path.dirname(__file__)), 'templates')
         return send_from_directory(templates_dir, 'testing.html')
     except Exception as e:
         logger.error(f"Error serving testing page: {e}")
@@ -35,11 +36,35 @@ def testing():
 
 @web_bp.route('/')
 def index():
-    """Serve the interactive web interface"""
+    """Serve the landing page"""
     try:
-        # Get the templates directory path
-        templates_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'templates')
+        templates_dir = os.path.join(os.path.dirname(
+            os.path.dirname(__file__)), 'templates')
+        return send_from_directory(templates_dir, 'landing.html')
+    except Exception as e:
+        logger.error(f"Error serving landing page: {e}")
+        return jsonify({'error': 'Landing page not found'}), 404
+
+
+@web_bp.route('/dashboard')
+def dashboard():
+    """Serve the organization dashboard"""
+    try:
+        templates_dir = os.path.join(os.path.dirname(
+            os.path.dirname(__file__)), 'templates')
+        return send_from_directory(templates_dir, 'dashboard.html')
+    except Exception as e:
+        logger.error(f"Error serving dashboard page: {e}")
+        return jsonify({'error': 'Dashboard page not found'}), 404
+
+
+@web_bp.route('/old-dashboard')
+def old_dashboard():
+    """Serve the old interactive web interface"""
+    try:
+        templates_dir = os.path.join(os.path.dirname(
+            os.path.dirname(__file__)), 'templates')
         return send_from_directory(templates_dir, 'index.html')
     except Exception as e:
-        logger.error(f"Error serving index page: {e}")
-        return jsonify({'error': 'Index page not found'}), 404
+        logger.error(f"Error serving old dashboard page: {e}")
+        return jsonify({'error': 'Old dashboard page not found'}), 404

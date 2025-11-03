@@ -1,0 +1,54 @@
+╔══════════════════════════════════════════════════════════════╗
+║  🚨 VENV ISSUE: picamera2 is system package, not in venv   ║
+╚══════════════════════════════════════════════════════════════╝
+
+PROBLEM:
+────────
+You're in a virtual environment (venv), but picamera2 is installed
+system-wide. Virtual environments isolate packages by default.
+
+QUICK FIX (Choose ONE):
+───────────────────────
+
+✅ SOLUTION 1 - Exit venv (EASIEST):
+────────────────────────────────────
+deactivate
+python3 test_camera.py
+python3 edge_server.py
+
+✅ SOLUTION 2 - Recreate venv with system packages:
+────────────────────────────────────────────────────
+deactivate
+rm -rf venv
+python3 -m venv --system-site-packages venv
+source venv/bin/activate
+python3 test_camera.py
+
+✅ SOLUTION 3 - Keep venv, install dependencies:
+─────────────────────────────────────────────────
+# While in venv:
+pip install opencv-python requests
+# Then exit and use system python:
+deactivate
+python3 edge_server.py
+
+RECOMMENDED: Solution 1
+────────────────────────
+Just deactivate the venv and run directly with system Python.
+All your dependencies (opencv, picamera2) are already installed
+system-wide.
+
+ON YOUR PI RIGHT NOW:
+─────────────────────
+(venv) $ deactivate
+$ python3 check_camera_libs.py
+$ python3 test_camera.py
+$ python3 edge_server.py
+
+WHY THIS HAPPENS:
+─────────────────
+- picamera2 is installed via apt (system package)
+- Virtual environments don't include system packages by default
+- You don't actually need a venv for this project!
+
+╚══════════════════════════════════════════════════════════════╝

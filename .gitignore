@@ -377,6 +377,31 @@ secrets/
 *.pfx
 config.local.*
 
+# Sensitive configuration files with credentials
+gcs-credentials.json
+*credentials*.json
+!*credentials*.example.json
+!gcs-credentials.example.json
+config.json
+!config.example.json
+raspi/config.json
+raspi-basic/config_picamera.json
+
+# Environment files (already covered above but being explicit)
+.env
+*.env
+!.env.example
+.env.local
+.env.*.local
+.env.production
+.env.development
+.env.test
+
+# JWT and API keys
+*.jwt
+*api_key*
+*secret_key*
+
 # ============================================================================
 # Testing
 # ============================================================================

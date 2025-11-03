@@ -1,0 +1,115 @@
+╔══════════════════════════════════════════════════════════════╗
+║     🚨 IMPORTANT: Python 3.13 + Legacy picamera Issue       ║
+╚══════════════════════════════════════════════════════════════╝
+
+Your Pi has Python 3.13, which is NOT compatible with legacy picamera!
+
+✅ SOLUTION: Use picamera2 (system package)
+───────────────────────────────────────────
+
+📋 ON YOUR RASPBERRY PI, RUN THESE COMMANDS:
+─────────────────────────────────────────────
+
+# 1. Check what you have
+python3 check_camera_libs.py
+
+# 2. If picamera2 is NOT installed, install it:
+sudo apt update
+sudo apt install -y python3-picamera2
+
+# 3. Verify it's installed:
+python3 -c "from picamera2 import Picamera2; print('✅ picamera2 works!')"
+
+# 4. Clean Python cache (IMPORTANT!):
+cd ~/YoloParklot/raspi
+find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null
+find . -type f -name "*.pyc" -delete 2>/dev/null
+
+# 5. Run the camera test:
+python3 test_camera.py
+
+# 6. If test passes, run edge server:
+python3 edge_server.py
+
+🔍 WHAT'S HAPPENING
+────────────────────
+- Legacy `picamera` library is OLD and doesn't work with Python 3.13
+- The error "ValueError: Unable to determine if this system is a Raspberry Pi" 
+  is because picamera doesn't recognize Python 3.13
+- `picamera2` is the NEW official library (pre-installed on modern Pi OS)
+- Your camera_manager.py now uses picamera2 (no legacy needed)
+
+📦 ABOUT PICAMERA2
+───────────────────
+- Pre-installed on Raspberry Pi OS (Bullseye and later)
+- System package (installed via apt, not pip)
+- Works with Python 3.9, 3.10, 3.11, 3.13
+- Official Raspberry Pi Foundation library
+- Better performance than legacy picamera
+
+⚠️  DON'T INSTALL picamera VIA PIP
+────────────────────────────────────
+❌ pip install picamera          # Won't work on Python 3.13
+❌ pip3 install picamera         # Won't work on Python 3.13
+✅ sudo apt install python3-picamera2  # This is the way!
+
+🎯 YOUR CURRENT STATUS
+───────────────────────
+✅ camera_manager.py - Updated (uses picamera2)
+✅ Python 3.13 - Works with picamera2
+❓ picamera2 installed? - Run check_camera_libs.py to verify
+
+📝 EXPECTED OUTPUT AFTER FIX
+─────────────────────────────
+```
+Using picamera2 library (system)
+✅ Pi Camera camera_1 opened using picamera2
+   Resolution: 1280x720
+Attempt 1: ✅ SUCCESS - Shape: (720, 1280, 3)
+Attempt 2: ✅ SUCCESS - Shape: (720, 1280, 3)
+Attempt 3: ✅ SUCCESS - Shape: (720, 1280, 3)
+💾 3 test image(s) saved
+✅ ALL TESTS PASSED - Camera is working correctly!
+```
+
+🔧 IF PICAMERA2 INSTALL FAILS
+───────────────────────────────
+Try these steps:
+
+1. Update system first:
+   sudo apt update && sudo apt upgrade -y
+
+2. Install picamera2:
+   sudo apt install -y python3-picamera2
+
+3. If still failing, check Pi OS version:
+   cat /etc/os-release
+   # Should be Bullseye (11) or later
+
+4. Reboot if needed:
+   sudo reboot
+
+💡 WHY camera_manager.py NOW WORKS
+────────────────────────────────────
+Old code:
+- Tried picamera2 ✓
+- Fell back to legacy picamera ✗ (fails on Python 3.13)  
+- Fell back to OpenCV ✗ (doesn't work well for Pi Camera)
+
+New code:
+- Tries picamera2 ✓ (works!)
+- Falls back to legacy picamera (only if really needed)
+- NO OpenCV fallback for Pi Camera
+
+🎉 SUMMARY
+───────────
+1. ✅ Your camera_manager.py is fixed
+2. ✅ Python 3.13 is compatible with picamera2
+3. ✅ picamera2 should be pre-installed
+4. 🔄 Just need to verify and test
+
+Run on your Pi:
+  python3 check_camera_libs.py
+  python3 test_camera.py
+
+╚══════════════════════════════════════════════════════════════╝

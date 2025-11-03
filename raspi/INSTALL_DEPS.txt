@@ -1,0 +1,75 @@
+╔══════════════════════════════════════════════════════════════╗
+║  📦 Installing System Dependencies - Quick Guide            ║
+╚══════════════════════════════════════════════════════════════╝
+
+PROBLEM:
+────────
+ModuleNotFoundError: No module named 'psutil'
+
+SOLUTION:
+─────────
+Install system-wide Python packages (NOT in venv)
+
+ON YOUR RASPBERRY PI:
+─────────────────────
+
+# 1. Exit venv if you're in one
+deactivate
+
+# 2. Install dependencies
+sudo apt update
+sudo apt install -y python3-psutil python3-picamera2 python3-opencv python3-requests
+
+# 3. Verify installations
+python3 check_camera_libs.py
+
+# 4. Test camera
+python3 test_camera.py
+
+# 5. Run edge server
+python3 edge_server.py
+
+OR USE THE INSTALL SCRIPT:
+───────────────────────────
+chmod +x install_dependencies.sh
+./install_dependencies.sh
+
+WHY SYSTEM-WIDE?
+────────────────
+✅ picamera2 MUST be system package (hardware access)
+✅ No need for venv on Raspberry Pi for this project
+✅ Simpler setup and deployment
+✅ Works with systemd services
+
+WHAT GETS INSTALLED:
+────────────────────
+- python3-picamera2  → Camera access
+- python3-psutil     → System monitoring (CPU, memory, etc.)
+- python3-opencv     → Image processing
+- python3-requests   → HTTP requests to server
+
+ALL VIA APT (SYSTEM PACKAGES):
+───────────────────────────────
+✅ Pre-compiled, optimized for Raspberry Pi
+✅ No compilation needed
+✅ Maintained by Raspberry Pi Foundation
+✅ Compatible with all Python versions
+
+EDGE SERVER NOW WORKS WITHOUT PSUTIL:
+──────────────────────────────────────
+If psutil is missing, edge server will:
+✅ Still start and run
+✅ Capture and upload images
+⚠️  Just skip system monitoring features
+
+So you can run it NOW and install psutil later!
+
+QUICK FIX RIGHT NOW:
+────────────────────
+# Just install psutil
+sudo apt install -y python3-psutil
+
+# Then run
+python3 edge_server.py
+
+╚══════════════════════════════════════════════════════════════╝

@@ -1,0 +1,17 @@
+# Raspberry Pi Edge Server Requirements
+
+# Core Dependencies
+opencv-python>=4.5.0
+numpy>=1.21.0
+requests>=2.25.0
+psutil>=5.8.0
+
+# Raspberry Pi Camera Support (optional - only needed on Raspberry Pi)
+# picamera2  # For Raspberry Pi OS Bullseye and later
+# picamera   # For older Raspberry Pi OS versions
+
+# Image Processing
+pillow>=8.0.0
+
+# Optional: For better logging
+colorlog>=6.0.0

@@ -1,0 +1,110 @@
+# Docker Compose for Production Environment
+version: '3.8'
+
+services:
+  # Flask Application - Production
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: parking-detection-prod
+    ports:
+      - "80:80"
+    volumes:
+      # Mount only necessary directories (not source code)
+      - ./output:/app/output
+      - ./uploads:/app/uploads
+      - ./gcs-credentials.json:/app/gcs-credentials.json:ro
+    env_file:
+      - .env
+    environment:
+      - FLASK_ENV=production
+      - FLASK_DEBUG=False
+      - FLASK_HOST=0.0.0.0
+      - FLASK_PORT=80
+      - MONGODB_URI=mongodb://mongodb:27017/
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - parking-network
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '1.0'
+          memory: 2G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # MongoDB - Production
+  mongodb:
+    image: mongo:7.0
+    container_name: parking-mongodb-prod
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-prod-data:/data/db
+      - mongodb-prod-config:/data/configdb
+      - ./mongodb-backup:/backup
+    environment:
+      - MONGO_INITDB_DATABASE=parking_detection
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME:-admin}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD:-change-this-password}
+    networks:
+      - parking-network
+    restart: always
+    command: mongod --auth
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Nginx - Reverse Proxy (Optional but recommended)
+  nginx:
+    image: nginx:alpine
+    container_name: parking-nginx
+    ports:
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - app
+    networks:
+      - parking-network
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+
+volumes:
+  mongodb-prod-data:
+    driver: local
+  mongodb-prod-config:
+    driver: local
+
+networks:
+  parking-network:
+    driver: bridge

@@ -1,0 +1,40 @@
+# Docker Compose for Development Environment
+version: '3.8'
+
+services:
+  # Flask Application - Development
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: parking-detection-dev
+    ports:
+      - "5001:5001"
+    volumes:
+      # Mount source code for hot reloading
+      - .:/app
+      - /app/__pycache__
+      - /app/**/__pycache__
+    env_file:
+      - .env
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=True
+      - FLASK_HOST=0.0.0.0
+      - FLASK_PORT=5001
+      # Use host.docker.internal to connect to MongoDB on host machine
+      - MONGODB_URI=mongodb://host.docker.internal:27017/
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - parking-network
+    restart: unless-stopped
+    command: python app.py
+
+  # MongoDB service removed - using host machine's MongoDB instead
+  # To use host MongoDB, ensure MongoDB is running on your system:
+  # sudo systemctl start mongod
+
+networks:
+  parking-network:
+    driver: bridge

@@ -1,0 +1,41 @@
+# Docker Compose - Default (Development)
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: parking-detection-app
+    ports:
+      - "${FLASK_PORT:-5001}:${FLASK_PORT:-5001}"
+    volumes:
+      - .:/app
+      - /app/__pycache__
+    env_file:
+      - .env
+    depends_on:
+      - mongodb
+    networks:
+      - parking-network
+    restart: unless-stopped
+
+  mongodb:
+    image: mongo:7.0
+    container_name: parking-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=parking_detection
+    networks:
+      - parking-network
+    restart: unless-stopped
+
+volumes:
+  mongodb-data:
+
+networks:
+  parking-network:
+    driver: bridge

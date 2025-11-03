@@ -1,0 +1,86 @@
+{
+    "_comment": "Raspberry Pi Edge Server Configuration Example",
+    "_instructions": "Copy this file to config.json and update with your settings",
+    "api_endpoint": "http://192.168.1.100:5001/parking/updateRaw",
+    "api_key": "GET_THIS_FROM_DASHBOARD",
+    "device_id": "raspberry_pi_parking_1",
+    "organization_name": "My Organization",
+    "location": "Building A - Main Entrance",
+    "cameras": [
+        {
+            "_comment": "Raspberry Pi Camera Module - Primary camera",
+            "node_id": "main_camera",
+            "type": "picamera",
+            "enabled": true,
+            "resolution": [
+                1920,
+                1080
+            ],
+            "framerate": 30,
+            "rotation": 0,
+            "description": "Raspberry Pi Camera - Main Parking View"
+        },
+        {
+            "_comment": "USB Webcam - Backup camera",
+            "node_id": "usb_camera_1",
+            "type": "usb",
+            "enabled": false,
+            "camera_index": 0,
+            "resolution": [
+                1280,
+                720
+            ],
+            "description": "USB Webcam - Side View"
+        },
+        {
+            "_comment": "IP Camera - Zone 1",
+            "node_id": "ip_camera_zone1",
+            "type": "rtsp",
+            "enabled": false,
+            "rtsp_url": "rtsp://admin:password@192.168.1.100:554/stream1",
+            "description": "IP Camera - Parking Zone 1"
+        },
+        {
+            "_comment": "IP Camera - Zone 2",
+            "node_id": "ip_camera_zone2",
+            "type": "rtsp",
+            "enabled": false,
+            "rtsp_url": "rtsp://admin:password@192.168.1.101:554/stream1",
+            "description": "IP Camera - Parking Zone 2"
+        }
+    ],
+    "capture_settings": {
+        "interval": 60,
+        "quality": 85,
+        "format": "jpg",
+        "save_local_copy": true,
+        "local_save_path": "./captured_frames",
+        "max_local_images": 100,
+        "_comment": "Capture every 60 seconds with 85% JPEG quality"
+    },
+    "upload_settings": {
+        "retry_attempts": 3,
+        "retry_delay": 5,
+        "timeout": 30,
+        "verify_ssl": true,
+        "batch_upload": false,
+        "batch_size": 5,
+        "_comment": "Retry 3 times with 5 second delay between attempts"
+    },
+    "system_settings": {
+        "log_level": "INFO",
+        "log_file": "./logs/edge_server.log",
+        "status_report_interval": 300,
+        "auto_restart_on_error": true,
+        "max_consecutive_errors": 10,
+        "_comment": "Print status every 5 minutes, auto-restart on errors"
+    },
+    "monitoring": {
+        "enable_system_stats": true,
+        "cpu_threshold": 80,
+        "memory_threshold": 85,
+        "disk_threshold": 90,
+        "temperature_threshold": 70,
+        "_comment": "Monitor system resources and alert on high usage"
+    }
+}

@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - IntelliLot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2c3e50;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --gray: #95a5a6;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: #f5f7fa;
+            color: var(--secondary);
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .username {
+            font-weight: 600;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+        }
+
+        .btn-secondary {
+            background: var(--gray);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        /* Welcome Section */
+        .welcome {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .welcome h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid var(--primary);
+        }
+
+        .stat-card.success {
+            border-left-color: var(--success);
+        }
+
+        .stat-card.warning {
+            border-left-color: var(--warning);
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+
+        /* Section */
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--secondary);
+        }
+
+        /* API Credentials */
+        .credential-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #e1e8ed;
+        }
+
+        .credential-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .credential-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .credential-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .credential-field {
+            margin-bottom: 1rem;
+        }
+
+        .credential-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 0.3rem;
+        }
+
+        .credential-value {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .credential-input {
+            flex: 1;
+            padding: 0.7rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            background: white;
+        }
+
+        .copy-btn {
+            padding: 0.7rem 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .copy-btn.copied {
+            background: var(--success);
+        }
+
+        .credential-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-top: 1rem;
+            position: relative;
+        }
+
+        .code-block-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .code-language {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .copy-code-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .copy-code-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .tab {
+            padding: 0.8rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--gray);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray);
+        }
+
+        .spinner {
+            border: 3px solid var(--light);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Image Card */
+        .image-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .image-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .image-card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: var(--light);
+        }
+
+        .image-card-body {
+            padding: 1rem;
+        }
+
+        .image-card-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .image-card-meta {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 0.75rem;
+        }
+
+        .image-card-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .image-stat {
+            font-size: 0.85rem;
+            padding: 0.4rem;
+            background: var(--light);
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .image-stat-value {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .image-stat-label {
+            font-size: 0.75rem;
+            color: var(--gray);
+        }
+
+        .image-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-raw {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .badge-edge {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .image-type-toggle {
+            margin-top: 0.75rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 0.4rem;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .toggle-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .credential-actions {
+                flex-direction: column;
+            }
+
+            #imagesGrid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">🅿️ IntelliLot</div>
+        <div class="user-info">
+            <span class="username" id="displayUsername">Loading...</span>
+            <button class="btn btn-secondary" onclick="viewOldDashboard()">Old Dashboard</button>
+            <button class="btn btn-danger" onclick="logout()">Logout</button>
+        </div>
+    </header>
+
+    <!-- Container -->
+    <div class="container">
+        <!-- Welcome Section -->
+        <div class="welcome">
+            <h1>Welcome back, <span id="welcomeUsername">User</span>! 👋</h1>
+            <p id="organizationName">Loading organization...</p>
+        </div>
+
+        <!-- Alert -->
+        <div id="alertBox" class="alert"></div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Active API Keys</div>
+                <div class="stat-value" id="activeKeysCount">0</div>
+            </div>
+            <div class="stat-card success">
+                <div class="stat-label">Parking Capacity</div>
+                <div class="stat-value" id="parkingCapacity">0</div>
+            </div>
+            <div class="stat-card warning">
+                <div class="stat-label">Location</div>
+                <div class="stat-value" id="locationInfo" style="font-size: 1.2rem;">-</div>
+            </div>
+        </div>
+
+        <!-- API Credentials Section -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">🔐 API Credentials</h2>
+                <button class="btn btn-success" onclick="generateCredential()">+ Generate New API Key</button>
+            </div>
+
+            <div id="credentialsLoading" class="loading">
+                <div class="spinner"></div>
+                <p>Loading credentials...</p>
+            </div>
+
+            <div id="credentialsList"></div>
+
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="empty-state-icon">🔑</div>
+                <h3>No API Credentials Yet</h3>
+                <p>Generate your first API key to start sending data from your edge devices</p>
+                <button class="btn btn-primary" onclick="generateCredential()" style="margin-top: 1rem;">Generate API
+                    Key</button>
+            </div>
+        </div>
+
+        <!-- Edge Device Setup Section -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">🖥️ Edge Device Setup</h2>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('python')">Python</button>
+                <button class="tab" onclick="showTab('curl')">cURL</button>
+                <button class="tab" onclick="showTab('javascript')">JavaScript</button>
+            </div>
+
+            <div id="pythonTab" class="tab-content active">
+                <h3>Python Example (Raspberry Pi / Edge Device)</h3>
+                <p style="margin-bottom: 1rem; color: var(--gray);">Save this as <code>edge_client.py</code> and run on
+                    your edge device:</p>
+                <div class="code-block">
+                    <button class="copy-code-btn" onclick="copyCode('pythonCode')">Copy</button>
+                    <pre id="pythonCode">import requests
+import json
+import time
+from datetime import datetime
+
+# Configuration - Replace with your credentials
+API_URL = "http://your-server.com"
+API_KEY = "YOUR_API_KEY_HERE"  # From dashboard
+CAMERA_ID = "entrance_camera_01"
+
+def send_parking_data(coordinates, occupied_count, total_count):
+    """Send parking detection results to cloud API"""
+    
+    url = f"{API_URL}/parking/update"
+    headers = {
+        "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json"
+    }
+    
+    payload = {
+        "camera_id": CAMERA_ID,
+        "coordinates": coordinates,
+        "total_slots": total_count,
+        "occupied_slots": occupied_count,
+        "empty_slots": total_count - occupied_count,
+        "occupancy_rate": (occupied_count / total_count) * 100,
+        "timestamp": datetime.utcnow().isoformat()
+    }
+    
+    try:
+        response = requests.post(url, json=payload, headers=headers)
+        response.raise_for_status()
+        print(f"✅ Data sent successfully: {response.json()}")
+        return True
+    except Exception as e:
+        print(f"❌ Error sending data: {e}")
+        return False
+
+# Example usage
+if __name__ == "__main__":
+    # Your parking slot coordinates
+    parking_coords = [
+        [100, 150, 200, 250],
+        [220, 150, 320, 250],
+        # ... more coordinates
+    ]
+    
+    while True:
+        # Run your YOLO detection here
+        # occupied = detect_vehicles(frame)
+        
+        # Send results to cloud
+        send_parking_data(
+            coordinates=parking_coords,
+            occupied_count=15,  # From your detection
+            total_count=50
+        )
+        
+        time.sleep(30)  # Update every 30 seconds</pre>
+                </div>
+            </div>
+
+            <div id="curlTab" class="tab-content">
+                <h3>cURL Example (Testing)</h3>
+                <p style="margin-bottom: 1rem; color: var(--gray);">Test your API connection from terminal:</p>
+                <div class="code-block">
+                    <button class="copy-code-btn" onclick="copyCode('curlCode')">Copy</button>
+                    <pre id="curlCode">curl -X POST http://your-server.com/parking/update \
+  -H "Authorization: Bearer YOUR_API_KEY_HERE" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "camera_id": "test_camera_01",
+    "coordinates": [[100,150,200,250]],
+    "total_slots": 50,
+    "occupied_slots": 35,
+    "empty_slots": 15,
+    "occupancy_rate": 70.0
+  }'</pre>
+                </div>
+            </div>
+
+            <div id="javascriptTab" class="tab-content">
+                <h3>JavaScript Example (Node.js / Browser)</h3>
+                <p style="margin-bottom: 1rem; color: var(--gray);">Use in your Node.js application or browser:</p>
+                <div class="code-block">
+                    <button class="copy-code-btn" onclick="copyCode('jsCode')">Copy</button>
+                    <pre id="jsCode">const API_URL = "http://your-server.com";
+const API_KEY = "YOUR_API_KEY_HERE";
+
+async function sendParkingData(data) {
+    try {
+        const response = await fetch(`${API_URL}/parking/update`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${API_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                camera_id: data.cameraId,
+                coordinates: data.coordinates,
+                total_slots: data.totalSlots,
+                occupied_slots: data.occupiedSlots,
+                empty_slots: data.emptySlots,
+                occupancy_rate: data.occupancyRate
+            })
+        });
+        
+        const result = await response.json();
+        console.log('✅ Data sent:', result);
+        return result;
+    } catch (error) {
+        console.error('❌ Error:', error);
+        throw error;
+    }
+}
+
+// Example usage
+sendParkingData({
+    cameraId: 'entrance_01',
+    coordinates: [[100, 150, 200, 250]],
+    totalSlots: 50,
+    occupiedSlots: 35,
+    emptySlots: 15,
+    occupancyRate: 70.0
+});</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monitoring Section -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">📸 Image Monitoring</h2>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <select id="cameraFilter" onchange="filterImages()"
+                        style="padding: 0.5rem; border-radius: 4px; border: 1px solid #ddd;">
+                        <option value="">All Cameras</option>
+                    </select>
+                    <select id="sourceFilter" onchange="filterImages()"
+                        style="padding: 0.5rem; border-radius: 4px; border: 1px solid #ddd;">
+                        <option value="">All Sources</option>
+                        <option value="raw_processing">Raw Processing</option>
+                        <option value="edge_processing">Edge Processing</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="refreshImages()">🔄 Refresh</button>
+                </div>
+            </div>
+
+            <div id="imagesLoading" class="loading">
+                <div class="spinner"></div>
+                <p>Loading images...</p>
+            </div>
+
+            <div id="imagesGrid"
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+            </div>
+
+            <div id="imagesEmptyState" class="empty-state" style="display: none;">
+                <div class="empty-state-icon">📷</div>
+                <h3>No Images Found</h3>
+                <p>Upload images from your edge devices to see them here</p>
+            </div>
+
+            <!-- Pagination -->
+            <div id="paginationControls" style="display: none; margin-top: 2rem; text-align: center;">
+                <div style="display: inline-flex; gap: 1rem; align-items: center;">
+                    <button class="btn btn-secondary" onclick="previousPage()" id="prevBtn">← Previous</button>
+                    <span id="pageInfo" style="font-weight: 600; color: var(--secondary);">Page 1 of 1</span>
+                    <button class="btn btn-secondary" onclick="nextPage()" id="nextBtn">Next →</button>
+                </div>
+                <div style="margin-top: 1rem; color: var(--gray); font-size: 0.9rem;">
+                    <span id="totalImagesInfo">0 images total</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="imageModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; overflow: auto;">
+        <div style="position: relative; max-width: 1200px; margin: 2rem auto; padding: 2rem;">
+            <button onclick="closeImageModal()"
+                style="position: absolute; top: 1rem; right: 1rem; background: white; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; font-size: 1.5rem; z-index: 10001;">×</button>
+            <img id="modalImage" style="width: 100%; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+            <div id="modalInfo" style="background: white; padding: 1.5rem; margin-top: 1rem; border-radius: 8px;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+            console.log('No token found, redirecting to landing page');
+            window.location.href = '/';
+        } else {
+            console.log('Token found:', token.substring(0, 20) + '...');
+        }
+
+        // Load user data
+        let userData = {};
+        let credentials = [];
+
+        async function loadUserProfile() {
+            try {
+                console.log('Loading user profile...');
+                const response = await fetch('/auth/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                console.log('Profile response status:', response.status);
+
+                if (response.ok) {
+                    userData = await response.json();
+                    console.log('User data loaded:', userData);
+                    document.getElementById('displayUsername').textContent = userData.username;
+                    document.getElementById('welcomeUsername').textContent = userData.username;
+                    document.getElementById('organizationName').textContent = userData.organization_name;
+                    document.getElementById('parkingCapacity').textContent = userData.size || 0;
+                    document.getElementById('locationInfo').textContent = userData.location || '-';
+                } else {
+                    const errorData = await response.json().catch(() => ({}));
+                    console.error('Profile load failed:', response.status, errorData);
+
+                    // Only logout on 401 (unauthorized) - token is invalid/expired
+                    if (response.status === 401) {
+                        console.log('Token invalid or expired, logging out');
+                        logout();
+                    } else {
+                        showAlert('Failed to load profile. Please refresh the page.', 'error');
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                showAlert('Failed to load profile. Please refresh the page.', 'error');
+            }
+        }
+
+        async function loadCredentials() {
+            try {
+                const response = await fetch('/auth/credentials', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                document.getElementById('credentialsLoading').style.display = 'none';
+
+                if (response.ok) {
+                    credentials = await response.json();
+
+                    if (credentials.length === 0) {
+                        document.getElementById('emptyState').style.display = 'block';
+                        document.getElementById('credentialsList').innerHTML = '';
+                    } else {
+                        document.getElementById('emptyState').style.display = 'none';
+                        renderCredentials();
+                    }
+
+                    document.getElementById('activeKeysCount').textContent =
+                        credentials.filter(c => c.status === 'active').length;
+                }
+            } catch (error) {
+                console.error('Error loading credentials:', error);
+                document.getElementById('credentialsLoading').style.display = 'none';
+            }
+        }
+
+        function renderCredentials() {
+            const container = document.getElementById('credentialsList');
+            container.innerHTML = credentials.map(cred => `
+                <div class="credential-card">
+                    <div class="credential-header">
+                        <span class="credential-name">${cred.name}</span>
+                        <span class="credential-status status-${cred.status}">
+                            ${cred.status.toUpperCase()}
+                        </span>
+                    </div>
+                    
+                    <div class="credential-field">
+                        <div class="credential-label">API Key</div>
+                        <div class="credential-value">
+                            <input type="text" class="credential-input" value="${cred.api_key}" readonly>
+                            <button class="copy-btn" onclick="copyToClipboard('${cred.api_key}', this)">
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="credential-field">
+                        <div class="credential-label">Created</div>
+                        <div>${new Date(cred.created_at).toLocaleString()}</div>
+                    </div>
+                    
+                    <div class="credential-actions">
+                        ${cred.status === 'active' ?
+                    `<button class="btn btn-secondary" onclick="revokeCredential('${cred.credential_id}')">Revoke</button>` :
+                    `<button class="btn btn-success" onclick="activateCredential('${cred.credential_id}')">Activate</button>`
+                }
+                        <button class="btn btn-danger" onclick="deleteCredential('${cred.credential_id}')">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function generateCredential() {
+            const name = prompt('Enter a name for this API key (e.g., "Raspberry Pi #1"):');
+            if (!name) return;
+
+            try {
+                const response = await fetch('/auth/credentials/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name })
+                });
+
+                if (response.ok) {
+                    showAlert('API key generated successfully!', 'success');
+                    loadCredentials();
+                } else {
+                    const error = await response.json();
+                    showAlert(error.error || 'Failed to generate API key', 'error');
+                }
+            } catch (error) {
+                showAlert('Network error', 'error');
+            }
+        }
+
+        async function revokeCredential(credentialId) {
+            if (!confirm('Are you sure you want to revoke this API key?')) return;
+
+            try {
+                const response = await fetch(`/auth/credentials/${credentialId}/revoke`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    showAlert('API key revoked', 'success');
+                    loadCredentials();
+                } else {
+                    showAlert('Failed to revoke API key', 'error');
+                }
+            } catch (error) {
+                showAlert('Network error', 'error');
+            }
+        }
+
+        async function activateCredential(credentialId) {
+            try {
+                const response = await fetch(`/auth/credentials/${credentialId}/activate`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    showAlert('API key activated', 'success');
+                    loadCredentials();
+                } else {
+                    showAlert('Failed to activate API key', 'error');
+                }
+            } catch (error) {
+                showAlert('Network error', 'error');
+            }
+        }
+
+        async function deleteCredential(credentialId) {
+            if (!confirm('Are you sure you want to delete this API key? This cannot be undone.')) return;
+
+            try {
+                const response = await fetch(`/auth/credentials/${credentialId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    showAlert('API key deleted', 'success');
+                    loadCredentials();
+                } else {
+                    showAlert('Failed to delete API key', 'error');
+                }
+            } catch (error) {
+                showAlert('Network error', 'error');
+            }
+        }
+
+        function copyToClipboard(text, button) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = '✓ Copied!';
+                button.classList.add('copied');
+
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        function copyCode(elementId) {
+            const codeElement = document.getElementById(elementId);
+            const text = codeElement.textContent;
+
+            navigator.clipboard.writeText(text).then(() => {
+                showAlert('Code copied to clipboard!', 'success');
+            });
+        }
+
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.textContent = message;
+            alertBox.className = `alert alert-${type} show`;
+
+            setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 5000);
+        }
+
+        function logout() {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('user_id');
+            localStorage.removeItem('username');
+            window.location.href = '/';
+        }
+
+        function viewOldDashboard() {
+            window.location.href = '/old-dashboard';
+        }
+
+        // Image Monitoring Functions
+        let currentPage = 1;
+        let imagesData = [];
+        const imagesPerPage = 10;
+
+        async function loadImages(page = 1) {
+            try {
+                document.getElementById('imagesLoading').style.display = 'block';
+                document.getElementById('imagesGrid').innerHTML = '';
+                document.getElementById('paginationControls').style.display = 'none';
+
+                const cameraFilter = document.getElementById('cameraFilter').value;
+                const sourceFilter = document.getElementById('sourceFilter').value;
+
+                let url = `/parking/images?page=${page}&limit=${imagesPerPage}`;
+                if (cameraFilter) url += `&camera_id=${cameraFilter}`;
+                if (sourceFilter) url += `&source=${sourceFilter}`;
+
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                document.getElementById('imagesLoading').style.display = 'none';
+
+                if (response.ok) {
+                    const data = await response.json();
+                    imagesData = data.images;
+
+                    if (imagesData.length === 0) {
+                        document.getElementById('imagesEmptyState').style.display = 'block';
+                        return;
+                    }
+
+                    document.getElementById('imagesEmptyState').style.display = 'none';
+                    renderImages(imagesData);
+                    updatePagination(data.pagination);
+
+                    // Update camera filter options
+                    updateCameraFilterOptions(imagesData);
+                } else {
+                    showAlert('Failed to load images', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading images:', error);
+                document.getElementById('imagesLoading').style.display = 'none';
+                showAlert('Failed to load images', 'error');
+            }
+        }
+
+        function renderImages(images) {
+            const grid = document.getElementById('imagesGrid');
+            grid.innerHTML = images.map(img => {
+                const timestamp = new Date(img.timestamp).toLocaleString();
+                const hasRaw = img.raw_image_url != null;
+                const hasAnnotated = img.annotated_image_url != null;
+                const defaultImage = hasAnnotated ? img.annotated_image_url : img.raw_image_url;
+
+                return `
+                    <div class="image-card" data-id="${img.id}">
+                        <img src="${defaultImage}" 
+                             class="image-card-img" 
+                             alt="Parking image"
+                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22200%22%3E%3Crect fill=%22%23f0f0f0%22 width=%22400%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22%3EImage Not Available%3C/text%3E%3C/svg%3E'"
+                             onclick="openImageModal('${defaultImage}', ${JSON.stringify(img).replace(/"/g, '&quot;')})">
+                        <div class="image-card-body">
+                            <div class="image-card-title">
+                                <span>📷 ${img.camera_id || 'Unknown'}</span>
+                                <span class="image-badge ${img.source === 'raw_processing' ? 'badge-raw' : 'badge-edge'}">
+                                    ${img.source === 'raw_processing' ? 'Raw' : 'Edge'}
+                                </span>
+                            </div>
+                            <div class="image-card-meta">
+                                🕐 ${timestamp}
+                            </div>
+                            <div class="image-card-stats">
+                                <div class="image-stat">
+                                    <div class="image-stat-value">${img.total_slots || 0}</div>
+                                    <div class="image-stat-label">Total Slots</div>
+                                </div>
+                                <div class="image-stat">
+                                    <div class="image-stat-value">${img.occupied_slots || 0}</div>
+                                    <div class="image-stat-label">Occupied</div>
+                                </div>
+                                <div class="image-stat">
+                                    <div class="image-stat-value">${img.empty_slots || 0}</div>
+                                    <div class="image-stat-label">Empty</div>
+                                </div>
+                                <div class="image-stat">
+                                    <div class="image-stat-value">${(img.occupancy_rate || 0).toFixed(1)}%</div>
+                                    <div class="image-stat-label">Occupancy</div>
+                                </div>
+                            </div>
+                            ${(hasRaw && hasAnnotated) ? `
+                                <div class="image-type-toggle">
+                                    <button class="toggle-btn active" onclick="event.stopPropagation(); switchImage(this, '${img.annotated_image_url}')">Annotated</button>
+                                    <button class="toggle-btn" onclick="event.stopPropagation(); switchImage(this, '${img.raw_image_url}')">Raw</button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function switchImage(btn, imageUrl) {
+            const card = btn.closest('.image-card');
+            const img = card.querySelector('.image-card-img');
+            const buttons = card.querySelectorAll('.toggle-btn');
+
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            img.src = imageUrl;
+        }
+
+        function updatePagination(pagination) {
+            currentPage = pagination.page;
+
+            document.getElementById('pageInfo').textContent = `Page ${pagination.page} of ${pagination.total_pages}`;
+            document.getElementById('totalImagesInfo').textContent = `${pagination.total_count} images total`;
+            document.getElementById('prevBtn').disabled = !pagination.has_prev;
+            document.getElementById('nextBtn').disabled = !pagination.has_next;
+
+            document.getElementById('paginationControls').style.display = 'block';
+        }
+
+        function updateCameraFilterOptions(images) {
+            const cameraFilter = document.getElementById('cameraFilter');
+            const cameras = [...new Set(images.map(img => img.camera_id).filter(Boolean))];
+            const currentValue = cameraFilter.value;
+
+            cameraFilter.innerHTML = '<option value="">All Cameras</option>' +
+                cameras.map(cam => `<option value="${cam}">${cam}</option>`).join('');
+
+            if (cameras.includes(currentValue)) {
+                cameraFilter.value = currentValue;
+            }
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                loadImages(currentPage - 1);
+            }
+        }
+
+        function nextPage() {
+            loadImages(currentPage + 1);
+        }
+
+        function filterImages() {
+            currentPage = 1;
+            loadImages(1);
+        }
+
+        function refreshImages() {
+            loadImages(currentPage);
+        }
+
+        function openImageModal(imageUrl, imageData) {
+            const modal = document.getElementById('imageModal');
+            const img = document.getElementById('modalImage');
+            const info = document.getElementById('modalInfo');
+
+            img.src = imageUrl;
+
+            const timestamp = new Date(imageData.timestamp).toLocaleString();
+            info.innerHTML = `
+                <h3 style="margin-bottom: 1rem; color: var(--secondary);">Image Details</h3>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                    <div><strong>Camera ID:</strong> ${imageData.camera_id || 'N/A'}</div>
+                    <div><strong>Node ID:</strong> ${imageData.node_id || 'N/A'}</div>
+                    <div><strong>Timestamp:</strong> ${timestamp}</div>
+                    <div><strong>Source:</strong> ${imageData.source || 'N/A'}</div>
+                    <div><strong>Total Slots:</strong> ${imageData.total_slots || 0}</div>
+                    <div><strong>Occupied:</strong> ${imageData.occupied_slots || 0}</div>
+                    <div><strong>Empty:</strong> ${imageData.empty_slots || 0}</div>
+                    <div><strong>Occupancy:</strong> ${(imageData.occupancy_rate || 0).toFixed(1)}%</div>
+                    <div><strong>Cars Detected:</strong> ${imageData.total_cars_detected || 0}</div>
+                    <div><strong>Processing Time:</strong> ${imageData.processing_time_ms ? imageData.processing_time_ms.toFixed(2) + ' ms' : 'N/A'}</div>
+                </div>
+                ${(imageData.raw_image_url && imageData.annotated_image_url) ? `
+                    <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+                        <button class="btn btn-primary" onclick="document.getElementById('modalImage').src='${imageData.annotated_image_url}'">View Annotated</button>
+                        <button class="btn btn-secondary" onclick="document.getElementById('modalImage').src='${imageData.raw_image_url}'">View Raw</button>
+                    </div>
+                ` : ''}
+            `;
+
+            modal.style.display = 'block';
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+
+        // Close modal on outside click
+        document.getElementById('imageModal')?.addEventListener('click', (e) => {
+            if (e.target.id === 'imageModal') {
+                closeImageModal();
+            }
+        });
+
+        // Initialize
+        loadUserProfile();
+        loadCredentials();
+        loadImages();
+    </script>
+</body>
+
+</html>
