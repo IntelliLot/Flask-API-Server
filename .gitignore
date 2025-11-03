@@ -275,23 +275,23 @@ desktop.ini
 *~
 
 # ============================================================================
-# Project Specific - Machine Learning & Data
-# ============================================================================
-# PyTorch/ML Models (large files)
-*.pt
-*.pth
-*.onnx
-*.weights
-*.h5
-*.pkl
-*.pickle
-!runs/detect/carpk_demo/weights/best.pt
+# # Project Specific - Machine Learning & Data
+# # ============================================================================
+# # PyTorch/ML Models (large files)
+# *.pt
+# *.pth
+# *.onnx
+# # *.weights
+# *.h5
+# *.pkl
+# *.pickle
+# # !runs/detect/carpk_demo/weights/best.pt
 
-# Training artifacts
-runs/
-wandb/
-mlruns/
-lightning_logs/
+# # Training artifacts
+# # runs/
+# wandb/
+# mlruns/
+# lightning_logs/
 
 # Data files (keep specific example files)
 *.jpg
